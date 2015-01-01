@@ -16,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -70,8 +71,7 @@ public class MyQAnalogClock extends View implements OnClickListener{
     private Timer timer;
     private TimerTask task = new TimerTask() { 
         @Override 
-        public void run() { 
-            // TODO Auto-generated method stub 
+        public void run() {  
             Message message = new Message(); 
             message.what = 1; 
             handler.sendMessage(message); 
@@ -79,9 +79,9 @@ public class MyQAnalogClock extends View implements OnClickListener{
     };;
     
     Handler handler = new Handler() { 
-        @Override 
+
+		@Override 
         public void handleMessage(Message msg) { 
-            // TODO Auto-generated method stub 
             // 要做的事情 
         	if (i==0 && j<2){
         		Toast.makeText(getContext(), "You can have a rest~", Toast.LENGTH_SHORT).show();
@@ -91,27 +91,27 @@ public class MyQAnalogClock extends View implements OnClickListener{
         	}
         	else if(i==1){
         		i=0;
+        		once = 0;
         		vibrator.vibrate(viborationStartInSecond * 1000);  
         		Toast.makeText(getContext(), "Start working! :)", Toast.LENGTH_SHORT).show();
         		timer.cancel();
         		task = new TimerTask() { 
         	        @Override 
         	        public void run() { 
-        	            // TODO Auto-generated method stub 
         	            Message message = new Message(); 
         	            message.what = 1; 
         	            handler.sendMessage(message); 
         	        } 
         	    };
     			timer = new Timer();
-    			timer.schedule(task, workTimeInMinute * 1000 ,restTimeInMinute * 1000); 
-    		
+    			timer.schedule(task, workTimeInMinute * 1000 * 60 ,restTimeInMinute * 1000 * 60); 
         	}
         	else{
         		j=0;
+        		once = 0;
         		TabActivity.counter++;
         		clearClock();
-        		Toast.makeText(getContext(), "You can have a long rest~ counter is " + TabActivity.counter, Toast.LENGTH_SHORT).show();
+        		Toast.makeText(getContext(), "You can have a long rest~ counter is " + TabActivity.counter, Toast.LENGTH_LONG).show();
         		workingCondition=false;
         	}
         	
@@ -132,25 +132,15 @@ public class MyQAnalogClock extends View implements OnClickListener{
         bmdMinute = new BitmapDrawable(mBmpMinute);  
   
         mBmpSecond = BitmapFactory.decodeResource(getResources(),  
-                R.drawable.clockgoog_minute);  
+                R.drawable.clock_second);  
         bmdSecond = new BitmapDrawable(mBmpSecond);  
         
-        
-        
-        
-        
-        
         //Change a photo to show the shadow
-        mBmpSchedule=BitmapFactory.decodeResource(getResources(), R.drawable.profile);
+        mBmpSchedule=BitmapFactory.decodeResource(getResources(), R.drawable.work_face);
         bmdSchedule= new BitmapDrawable(mBmpSchedule);
         
-        
-        
-        
-        
-        
         mBmpDial = BitmapFactory.decodeResource(getResources(),  
-                R.drawable.clock_dial);  
+                R.drawable.clock_face);  
         bmdDial = new BitmapDrawable(mBmpDial);  
 //        mWidth = mBmpDial.getWidth();  
 //        mHeigh = mBmpDial.getHeight();  
@@ -191,7 +181,6 @@ public class MyQAnalogClock extends View implements OnClickListener{
   
     protected void onDraw(Canvas canvas) {  
         super.onDraw(canvas);  
-
         
         Calendar cal = Calendar.getInstance(); 
         int hour = cal.get(Calendar.HOUR);  
@@ -210,36 +199,36 @@ public class MyQAnalogClock extends View implements OnClickListener{
             canvas.scale(scale, scale, centerX, centerY);  
         }  
   
-        bmdDial.setBounds(centerX - (mWidth / 2), centerY - (mHeigh / 2),  
-                centerX + (mWidth / 2), centerY + (mHeigh / 2));  
-        bmdDial.draw(canvas);  
-  
         if (workingCondition==true) {
-			if (once==0){
-				once=1;
-				Calendar c = Calendar.getInstance();
-				int minuteInt = c.get(Calendar.MINUTE);
-				shadowRotate = minuteInt * 6.0f;
-			} 
+			
+        	if (once == 0) {
+        		once = 1;
+    			Calendar c = Calendar.getInstance();
+    			int minuteInt = c.get(Calendar.MINUTE);
+    			shadowRotate = minuteInt * 6.0f;
+        	}
 			
 	        mTempHeigh = (int) (availableWidth * 0.44);
 	        mTempWidth = mTempHeigh; 
 	        canvas.save();  
 	        canvas.rotate(shadowRotate, centerX, centerY);  
-	        bmdSchedule.setBounds(centerX - (mTempWidth / 2), centerY  
-	                - (mTempHeigh / 2), centerX + (mTempWidth / 2), centerY  
-	                + (mTempHeigh / 2));  
+	        bmdSchedule.setBounds(centerX - (mWidth / 2), centerY - (mHeigh / 2),  
+	                centerX + (mWidth / 2), centerY + (mHeigh / 2));
 	        bmdSchedule.draw(canvas); 
 	        canvas.restore(); 
+		} else {
+			bmdDial.setBounds(centerX - (mWidth / 2), centerY - (mHeigh / 2),  
+	                centerX + (mWidth / 2), centerY + (mHeigh / 2));  
+	        bmdDial.draw(canvas);  
 		}
         mTempHeigh = (int) (availableWidth * 0.44);
         mTempWidth = (int) (mTempHeigh/6);  
           
         canvas.save();  
         canvas.rotate(hourRotate, centerX, centerY);  
-        bmdHour.setBounds(centerX - (mTempWidth / 2), centerY  
-                - (mTempHeigh / 2), centerX + (mTempWidth / 2), centerY  
-                + (mTempHeigh / 2));  
+        bmdHour.setBounds((int) (centerX - (mTempWidth / 2.1)), (int) (centerY  
+                - (mTempHeigh / 2.1)), (int) (centerX + (mTempWidth / 2.1)), (int) (centerY  
+                + (mTempHeigh / 2.1)));
         bmdHour.draw(canvas);  
   
         canvas.restore();  
@@ -248,9 +237,9 @@ public class MyQAnalogClock extends View implements OnClickListener{
         mTempWidth = (int) (mTempHeigh/6); 
         canvas.save();  
         canvas.rotate(minuteRotate, centerX, centerY);  
-        bmdMinute.setBounds(centerX - (mTempWidth / 2), centerY  
-                - (mTempHeigh / 2), centerX + (mTempWidth / 2), centerY  
-                + (mTempHeigh / 2));  
+        bmdMinute.setBounds((int) (centerX - (mTempWidth / 2.1)), (int) (centerY  
+                - (mTempHeigh / 2.1)), (int) (centerX + (mTempWidth / 2.1)), (int) (centerY  
+                + (mTempHeigh / 2.1)));  
         bmdMinute.draw(canvas);  
   
 		        
@@ -259,12 +248,10 @@ public class MyQAnalogClock extends View implements OnClickListener{
         mTempHeigh = (int) (availableWidth * 0.44);
         mTempWidth = (int) (mTempHeigh/6); 
         canvas.rotate(secondRotate, centerX, centerY);  
-        bmdSecond.setBounds(centerX - (mTempWidth / 2), centerY  
-                - (mTempHeigh / 2), centerX + (mTempWidth / 2), centerY  
-                + (mTempHeigh / 2));  
+        bmdSecond.setBounds((int) (centerX - (mTempWidth / 2.1)), (int) (centerY  
+                - (mTempHeigh / 2.1)), (int) (centerX + (mTempWidth / 2.1)), (int) (centerY  
+                + (mTempHeigh / 2.1)));  
         bmdSecond.draw(canvas);  
- 
-
 		
         if (scaled) {  
             canvas.restore();  
@@ -280,7 +267,7 @@ public class MyQAnalogClock extends View implements OnClickListener{
 			once=0;
 			Toast.makeText(getContext(), "Start working! :)", Toast.LENGTH_SHORT).show();
 			timer = new Timer();
-			timer.schedule(task, workTimeInMinute * 1000,restTimeInMinute * 1000);
+			timer.schedule(task, workTimeInMinute * 1000 * 60,restTimeInMinute * 1000 * 60);
  
 	        
 
@@ -295,7 +282,6 @@ public class MyQAnalogClock extends View implements OnClickListener{
 		task = new TimerTask() { 
 	        @Override 
 	        public void run() { 
-	            // TODO Auto-generated method stub 
 	            Message message = new Message(); 
 	            message.what = 1; 
 	            handler.sendMessage(message); 

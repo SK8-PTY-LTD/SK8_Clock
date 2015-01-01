@@ -53,6 +53,7 @@ public class TaskFragment extends Fragment {
         this.clock = (MyQAnalogClock) rootView.findViewById(R.id.taskClock);
         
         final ListView mListView = (ListView) rootView.findViewById(R.id.listView);
+        mListView.setVisibility(View.INVISIBLE);
         String[] mForm = new String[]{"img","title1","title2","time"};
         int[] mTo = new int[]{R.id.img,R.id.title1,R.id.title2,R.id.time};
         final List<Map<String,Object>> mList = new ArrayList<Map<String,Object>>();
