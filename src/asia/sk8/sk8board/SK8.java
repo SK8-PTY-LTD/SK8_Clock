@@ -2,7 +2,6 @@ package asia.sk8.sk8board;
 
 import com.parse.Parse;
 import android.app.Application;
-import android.util.Log;
 
 public class SK8 extends Application
 {

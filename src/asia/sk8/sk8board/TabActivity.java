@@ -49,7 +49,7 @@ public class TabActivity extends Activity implements TabListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
         
-        final ParseQuery query = ParseQuery.getQuery("SK8Time");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("SK8Time");
 		query.whereEqualTo("date", "22/12/2014 00:00");
 		query.whereEqualTo("user", "Jack Song");
 		query.countInBackground(new CountCallback() {
@@ -119,8 +119,8 @@ public class TabActivity extends Activity implements TabListener {
     }
     
     @Override
-    protected void onPause() {
-    	super.onPause();
+    protected void onStop() {
+    	super.onStop();
     	System.exit(0);
     }
     
@@ -159,7 +159,7 @@ public class TabActivity extends Activity implements TabListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.tab, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -230,9 +230,9 @@ public class TabActivity extends Activity implements TabListener {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    return "Card";
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    return "Clock";
                 case 2:
                     return getString(R.string.title_section3).toUpperCase(l);
             }

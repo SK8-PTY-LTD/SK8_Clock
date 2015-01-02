@@ -158,7 +158,7 @@ public class NameCardFragment extends Fragment {
 
 				} else {
 					if (qrImage == null){
-						imgBtView.setImageResource(R.drawable.mengzhuo);
+						imgBtView.setImageResource(R.drawable.loading);
 						isQRShown=true;
 					}
 					imgBtView.setImageBitmap(qrImage);
